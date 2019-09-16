@@ -1,6 +1,7 @@
 package com.blacksun.customfancontroller;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,31 +20,59 @@ public class DialView extends View {
     private int mActiveSelection;
     private final StringBuffer mTempLabel = new StringBuffer(8);
     private final float[] mTempResult = new float[2];
+    private int mFanOnColor;
+    private int mFanOffColor;
 
-    private void init() {
+    private void init(AttributeSet attrs) {
+        mFanOnColor = Color.GRAY;
+        mFanOffColor = Color.GREEN;
+
+        if (attrs != null) {
+            TypedArray typedArray = getContext().obtainStyledAttributes(attrs,
+                    R.styleable.DialView,
+                    0, 0);
+            mFanOffColor = typedArray.getColor(R.styleable.DialView_fanOffColor, mFanOffColor);
+            mFanOnColor = typedArray.getColor(R.styleable.DialView_fanOnColor, mFanOnColor);
+            typedArray.recycle();
+        }
+
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.BLACK);
         mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
         mTextPaint.setTextSize(40f);
         mDialPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mDialPaint.setColor(Color.GRAY);
+        mDialPaint.setColor(mFanOffColor);
         mActiveSelection = 0;
+
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mActiveSelection = (mActiveSelection + 1) % SELECTION_COUNT;
+                if (mActiveSelection >= 1) {
+                    mDialPaint.setColor(mFanOnColor);
+                } else {
+                    mDialPaint.setColor(mFanOffColor);
+                }
+                invalidate();
+            }
+        });
     }
 
     public DialView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public DialView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(attrs);
     }
 
     public DialView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(attrs);
     }
 
     @Override
@@ -78,7 +107,7 @@ public class DialView extends View {
         }
         final float markerRadius = mRadius - 35;
         float[] xyData = computeXYForPosition(mActiveSelection, markerRadius);
-        float x= xyData[0];
+        float x = xyData[0];
         float y = xyData[1];
         canvas.drawCircle(x, y, 20, mTextPaint);
     }

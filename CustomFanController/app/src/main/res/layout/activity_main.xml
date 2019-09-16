@@ -22,12 +22,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.blacksun.customfancontroller.DialView
         android:id="@+id/dialView"
-        android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@id/customViewLabel"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:fanOnColor="@color/colorPrimaryDark"
+        app:fanOffColor="@color/colorPrimary"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
