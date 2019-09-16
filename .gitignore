@@ -1,0 +1,4 @@
+CustomFanController/app/build/*
+CustomFanController/.gradle/*
+CustomFanController/.idea/*
+CustomFanController/local.properties
